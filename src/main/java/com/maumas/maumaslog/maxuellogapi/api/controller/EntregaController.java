@@ -3,6 +3,7 @@ package com.maumas.maumaslog.maxuellogapi.api.controller;
 import com.maumas.maumaslog.maxuellogapi.api.assembler.EntregaAssembler;
 import com.maumas.maumaslog.maxuellogapi.api.model.DestinatarioModel;
 import com.maumas.maumaslog.maxuellogapi.api.model.EntregaModel;
+import com.maumas.maumaslog.maxuellogapi.api.model.input.EntregaInput;
 import com.maumas.maumaslog.maxuellogapi.domain.model.Entrega;
 import com.maumas.maumaslog.maxuellogapi.domain.repository.EntregaRepository;
 import com.maumas.maumaslog.maxuellogapi.domain.service.SolicitacaoEntregaService;
@@ -27,8 +28,11 @@ public class EntregaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EntregaModel solicitar(@Valid @RequestBody Entrega entrega) {
-        Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(entrega);
+    public EntregaModel solicitar(@Valid @RequestBody EntregaInput entregaInput) {
+
+        Entrega novaEntrega = entregaAssembler.toEntity(entregaInput);
+        Entrega entregaSolicitada = solicitacaoEntregaService.solicitar(novaEntrega);
+
         return entregaAssembler.toModel(entregaSolicitada);
     }
 

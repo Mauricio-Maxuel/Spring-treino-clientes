@@ -20,7 +20,6 @@ import javax.validation.groups.Default;
 @Table(name = "cliente")
 public class Cliente {
 
-    @NotNull(groups = ValidationGroups.ClienteId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

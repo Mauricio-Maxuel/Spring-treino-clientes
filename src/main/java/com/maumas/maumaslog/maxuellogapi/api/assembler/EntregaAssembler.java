@@ -1,6 +1,7 @@
 package com.maumas.maumaslog.maxuellogapi.api.assembler;
 
 import com.maumas.maumaslog.maxuellogapi.api.model.EntregaModel;
+import com.maumas.maumaslog.maxuellogapi.api.model.input.EntregaInput;
 import com.maumas.maumaslog.maxuellogapi.domain.model.Entrega;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,6 +24,10 @@ public class EntregaAssembler {
         return entregas.stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());
+    }
+
+    public Entrega toEntity(EntregaInput entregaInput){
+        return modelMapper.map(entregaInput,Entrega.class);
     }
 
 }
