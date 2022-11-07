@@ -4,6 +4,8 @@ import com.maumas.maumaslog.maxuellogapi.domain.exception.NegocioException;
 import com.maumas.maumaslog.maxuellogapi.domain.model.Cliente;
 import com.maumas.maumaslog.maxuellogapi.domain.repository.ClienteRepository;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class CatalogoClienteService {
 
     private ClienteRepository clienteRepository;
+
+
+
+    @Transactional
+    public Cliente buscar(Long clienteId){
+        return  clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new NegocioException("Cliente não encontrado"));
+    }
 
     @Transactional
     public Cliente salvar(Cliente cliente){
