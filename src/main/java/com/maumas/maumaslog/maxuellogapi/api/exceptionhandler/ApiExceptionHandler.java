@@ -1,5 +1,6 @@
 package com.maumas.maumaslog.maxuellogapi.api.exceptionhandler;
 
+import com.maumas.maumaslog.maxuellogapi.domain.exception.EntidadeNaoEncontradaException;
 import com.maumas.maumaslog.maxuellogapi.domain.exception.NegocioException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         problema.setCampos(campos);
 
         return handleExceptionInternal(ex, problema, headers, status, request);
+    }
+
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<Object> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+
+        Problema problema = new Problema();
+        problema.setStatus(status.value());
+        problema.setDataHora(OffsetDateTime.now());
+        problema.setTitulo(ex.getMessage());
+
+        return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
     }
 
     @ExceptionHandler(NegocioException.class)
