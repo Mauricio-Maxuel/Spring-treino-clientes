@@ -2,6 +2,7 @@ package com.maumas.maumaslog.maxuellogapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.maumas.maumaslog.maxuellogapi.domain.ValidationGroups;
+import com.maumas.maumaslog.maxuellogapi.domain.exception.NegocioException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,13 +30,11 @@ public class Entrega {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @ManyToOne
     private Cliente cliente;
 
     @Embedded
     private Destinatario destinatario;
-
 
     private BigDecimal taxa;
 
@@ -59,5 +58,23 @@ public class Entrega {
 
         return ocorrencia;
 
+    }
+
+    public void finalizar() {
+
+        if (naoPodeSerFinalizada()) {
+            throw new NegocioException("Entrega Não pode ser finalizada");
+        }
+
+        setStatus(StatusEntrega.FINALIZADA);
+        setDataFinalizacao(OffsetDateTime.now());
+    }
+
+    public boolean podeSerFinalizada(){
+        return StatusEntrega.PENDENTE.equals(getStatus());
+    }
+
+    public boolean naoPodeSerFinalizada(){
+        return !podeSerFinalizada();
     }
 }

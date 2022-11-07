@@ -1,11 +1,11 @@
 package com.maumas.maumaslog.maxuellogapi.api.controller;
 
 import com.maumas.maumaslog.maxuellogapi.api.assembler.EntregaAssembler;
-import com.maumas.maumaslog.maxuellogapi.api.model.DestinatarioModel;
 import com.maumas.maumaslog.maxuellogapi.api.model.EntregaModel;
 import com.maumas.maumaslog.maxuellogapi.api.model.input.EntregaInput;
 import com.maumas.maumaslog.maxuellogapi.domain.model.Entrega;
 import com.maumas.maumaslog.maxuellogapi.domain.repository.EntregaRepository;
+import com.maumas.maumaslog.maxuellogapi.domain.service.FinalizacaoEntregaService;
 import com.maumas.maumaslog.maxuellogapi.domain.service.SolicitacaoEntregaService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -23,8 +23,9 @@ public class EntregaController {
 
     private SolicitacaoEntregaService solicitacaoEntregaService;
     private EntregaRepository entregaRepository;
-    private ModelMapper modelMapper;
     private EntregaAssembler entregaAssembler;
+
+    private FinalizacaoEntregaService finalizacaoEntregaService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -36,6 +37,12 @@ public class EntregaController {
         return entregaAssembler.toModel(entregaSolicitada);
     }
 
+    @PutMapping("/{entregaId}/finalizacao")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void finalizar(@PathVariable Long entregaId) {
+        finalizacaoEntregaService.finalizar(entregaId);
+    }
+
     @GetMapping
     public List<EntregaModel> listar() {
         return entregaAssembler.toCollectionModel(entregaRepository.findAll());
@@ -45,8 +52,8 @@ public class EntregaController {
     public ResponseEntity<EntregaModel> buscar(@PathVariable Long entregaId) {
 
         return entregaRepository.findById(entregaId)
-                    .map(entrega -> ResponseEntity.ok(entregaAssembler.toModel(entrega)))
-                    .orElse(ResponseEntity.notFound().build());
+                .map(entrega -> ResponseEntity.ok(entregaAssembler.toModel(entrega)))
+                .orElse(ResponseEntity.notFound().build());
 
 //                    EntregaModel entregaModel = new EntregaModel();
 //                    entregaModel.setId(entrega.getId());
@@ -63,5 +70,5 @@ public class EntregaController {
 //                    entregaModel.setDataFinalizado(entrega.getDataFinalizacao());
 
 
-                }
     }
+}
